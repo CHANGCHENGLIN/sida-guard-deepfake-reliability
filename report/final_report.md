@@ -1,0 +1,142 @@
+# SIDA-Guard: A No-Training Quality-Aware Reliability Layer for Deepfake Detection
+
+## Abstract
+
+Deepfake detection has become an important research topic due to the increasing realism of manipulated videos. Existing deepfake detectors usually output a binary prediction, such as real or fake. However, real-world videos are often degraded by lighting flicker, motion blur, ghosting, background noise, or camera instability. These natural visual degradations may reduce the reliability of detector predictions, especially when detectors are applied outside clean benchmark settings. This project proposes SIDA-Guard, a no-training quality-aware reliability layer for deepfake detection. Instead of training a new detector, SIDA-Guard analyzes video quality and estimates whether a detector prediction may be unreliable. The framework generates controlled perturbations on whole-frame, face-region, and background-region areas, records perturbation metadata, extracts whole-frame and fixed face ROI quality metrics, and converts these metrics into an interpretable quality risk score. Experimental results show that whole-frame metrics capture global degradation such as flicker and blur, while fixed face ROI metrics distinguish face-region degradation from background-only degradation. The final risk score assigns the highest risk to mixed whole-frame degradation and the lowest risk to clean videos, demonstrating its ability to provide interpretable reliability warnings for deepfake detection pipelines.
+
+**Keywords:** Deepfake detection, video quality, reliability estimation, face ROI, visual degradation, perturbation analysis
+
+## 1. Introduction
+
+Deepfake videos are synthetic or manipulated videos in which a person's face or identity is altered using artificial intelligence techniques. As generative models become more powerful, manipulated videos are increasingly difficult to distinguish from real videos. This creates risks for misinformation, digital trust, identity misuse, and online media verification. Because of these risks, deepfake detection has become an important task in computer vision and multimedia forensics.
+
+Most existing deepfake detection systems focus on classification accuracy. Given an input image or video, the detector predicts whether it is real or fake. However, this prediction alone is not always sufficient in real-world scenarios. A detector may perform well on clean benchmark datasets but behave unreliably when the input video contains poor visual quality. For example, videos recorded in real environments may include lighting flicker, motion blur, ghosting, unstable camera motion, compression artifacts, or background noise. These degradations are not necessarily caused by manipulation, but they may affect the detector's decision.
+
+This motivates an important question: the problem is not only whether a video is fake, but also whether the detector's prediction can be trusted. If a real video is low quality and is incorrectly classified as fake, the result may create a false alarm. In practical applications, such false alarms can be harmful because they may lead to wrong accusations or unreliable content moderation decisions.
+
+In this project, we propose SIDA-Guard, a no-training quality-aware reliability layer for deepfake detection. Instead of building or training a new deepfake detector, SIDA-Guard analyzes whether the input video contains visual quality problems that may reduce prediction reliability. The system does not replace existing detectors. Rather, it provides a reliability warning before the detector output is accepted.
+
+The main idea is to analyze visual degradation at two levels: the whole frame and the face region. Whole-frame quality metrics capture global degradation such as full-frame flicker or blur. However, whole-frame metrics alone are not enough because deepfake detectors usually rely heavily on facial regions. Therefore, we also introduce fixed face ROI metrics, where the face region detected from a clean reference video is reused across perturbed versions. This allows the system to compare the same facial area under different degradation conditions and avoid unstable face detection caused by degraded videos.
+
+The contributions of this project are summarized as follows:
+
+1. We propose SIDA-Guard, a no-training reliability layer for deepfake detection.
+2. We design controlled perturbations for whole-frame, face-only, and background-only degradation.
+3. We combine whole-frame quality metrics with fixed face ROI quality analysis.
+4. We convert visual quality metrics into an interpretable risk score and warning decision.
+
+## 2. Related Work
+
+### 2.1 Deepfake Detection Datasets
+
+Deepfake detection research has been strongly driven by benchmark datasets. FaceForensics++ is one of the early large-scale datasets for face manipulation detection and has been widely used for evaluating deepfake detection methods. It includes manipulated videos generated by different face manipulation techniques and provides multiple compression settings for robustness evaluation.
+
+The DeepFake Detection Challenge dataset was introduced to support large-scale research on face-swap video detection. Compared with earlier datasets, DFDC contains more diverse subjects, backgrounds, and recording conditions. This makes it useful for studying detector generalization in more realistic scenarios.
+
+Celeb-DF is another widely used dataset designed to provide high-quality and more challenging deepfake videos. Compared with some earlier datasets, Celeb-DF improves the visual quality of fake videos, making artifacts less obvious and detection more difficult.
+
+These datasets are important for training and benchmarking deepfake detectors. However, the goal of this project is different. Instead of training a detector on a large dataset, we focus on analyzing whether visual degradation may reduce the reliability of detector predictions.
+
+### 2.2 Deepfake Detection Methods and Benchmarks
+
+Many deepfake detection methods use convolutional neural networks to classify facial images or video frames. Earlier approaches often relied on visual artifacts, blending boundaries, or inconsistencies in facial regions. Later methods used stronger architectures and larger datasets to improve classification performance.
+
+Benchmarks such as DeepfakeBench aim to standardize evaluation protocols for deepfake detection. This is important because different preprocessing pipelines, datasets, and metrics can lead to unfair comparisons between methods.
+
+Although many detectors improve classification accuracy, they usually assume that the input video is suitable for prediction. In real-world use, this assumption may not always hold. A detector may still output a prediction even when the video quality is poor. This motivates the need for a quality-aware reliability layer.
+
+### 2.3 Robustness and Visual Degradation
+
+Real-world videos often contain natural degradations such as motion blur, lighting variation, compression, and camera instability. These degradations may not be malicious, but they can affect visual features used by deepfake detectors. A detector may confuse natural degradation with manipulation artifacts, especially when the model relies on low-level image cues.
+
+Instead of treating all degraded videos as normal inputs, SIDA-Guard explicitly analyzes the quality risk of the input. By separating whole-frame degradation, face-region degradation, and background-only degradation, the framework provides a more interpretable way to understand where the quality problem occurs.
+
+## 3. Proposed Approach
+
+### 3.1 Overview
+
+SIDA-Guard is designed as a no-training reliability layer for deepfake detection. The system takes videos as input and analyzes whether visual quality degradation may make detector predictions unreliable. The full pipeline consists of five stages:
+
+1. Video sampling
+2. Controlled perturbation generation
+3. Perturbation metadata recording
+4. Whole-frame and fixed face ROI metric extraction
+5. Quality risk scoring and reliability decision
+
+Unlike conventional deepfake detectors, SIDA-Guard does not directly classify videos as real or fake. Instead, it produces a quality risk score and reliability decision. The decision can be used together with any existing detector.
+
+### 3.2 Controlled Perturbation Design
+
+To analyze visual quality risk, we generate controlled perturbations in three regions: whole-frame degradation, face-only degradation, and background-only degradation. Whole-frame degradation modifies the entire video frame. This includes lighting flicker, motion blur, ghosting, and mixed degradation. Face-only degradation modifies only the facial region. Background-only degradation modifies the background while preserving the face region.
+
+The mixed whole-frame condition combines flicker, motion blur, and ghosting. This simulates a severe real-world video quality problem where multiple degradations occur at the same time.
+
+### 3.3 Perturbation Metadata
+
+For each generated video, SIDA-Guard records metadata including perturbation type, affected region, start frame, end frame, affected frames, modified frames, and ROI difference score. This metadata ensures that each perturbation is traceable and experimentally controlled.
+
+### 3.4 Whole-frame Quality Metrics
+
+Whole-frame metrics analyze the entire frame. We extract brightness statistics, flicker score, blur score, saturation ratio, and temporal instability. Flicker score is computed based on brightness variation over time. Blur score is computed using image sharpness, where lower values indicate stronger blur. Temporal instability measures frame-to-frame variation.
+
+### 3.5 Fixed Face ROI Quality Metrics
+
+Whole-frame metrics may hide local facial degradation because the face region may occupy only a small part of the frame. To address this issue, SIDA-Guard uses fixed face ROI analysis. The system first detects the face box from the clean video. Then, the same face box is applied to all perturbed versions of the same video. This ensures that the exact same facial area is compared across conditions.
+
+Fixed face ROI metrics include face brightness, face flicker score, face blur score, and face temporal instability. These metrics help determine whether the degradation actually affects the face region.
+
+### 3.6 SIDA-Guard Risk Score
+
+SIDA-Guard computes two major risk components: global quality risk and face quality risk. Global risk is computed from whole-frame metrics, while face risk is computed from fixed face ROI metrics. The final quality risk is computed by combining these two components. The reliability score is then defined as:
+
+Reliability Score = 1 - Final Quality Risk
+
+Based on this score, the system outputs one of three decisions: accept, warning, or abstain.
+
+## 4. Experimental Analysis
+
+### 4.1 Experimental Setup
+
+The experiment uses sampled real and fake videos. Each video is processed into multiple conditions, including clean, light flicker, motion blur, ghosting, mixed whole-frame degradation, face-only flicker, face-only blur, background flicker, and background blur.
+
+For each condition, SIDA-Guard generates a processed video, preview images, metadata, whole-frame metrics, fixed face ROI metrics, and final risk scores.
+
+### 4.2 Visual Verification
+
+Preview images are generated in the form of Original, Perturbed, and Difference. These visual comparisons verify whether the intended region was modified. In face-only perturbations, the difference map should mainly appear around the face. In background-only perturbations, the face region should remain mostly unchanged.
+
+### 4.3 Whole-frame Metric Results
+
+Whole-frame flicker score increases under lighting flicker conditions, especially when the entire frame or background is affected. This indicates that global brightness instability is successfully captured. Whole-frame sharpness score decreases under motion blur conditions. Since lower sharpness score indicates stronger blur, this confirms that motion blur perturbations are detected by the quality metrics.
+
+### 4.4 Fixed Face ROI Results
+
+Fixed face ROI metrics provide more detailed analysis of facial degradation. When the face or the whole frame is affected by flicker, the fixed face flicker score increases. However, when only the background is affected by flicker, the face flicker score remains close to the clean condition.
+
+Similarly, when the face or the whole frame is blurred, the fixed face sharpness score decreases. In contrast, background-only blur keeps the face sharpness close to clean. These results show that fixed face ROI metrics can distinguish whether the degradation actually affects the face region or only the background.
+
+### 4.5 SIDA-Guard Risk Score Results
+
+The final SIDA-Guard risk score assigns the highest risk to mixed whole-frame degradation. This is reasonable because mixed whole-frame degradation combines flicker, motion blur, and ghosting. In the experiment, mixed_whole obtains a quality risk score of 0.618 and a reliability score of 0.382.
+
+The light_flicker_whole condition also receives a high risk score of 0.484, showing that strong lighting instability can reduce reliability. Motion_blur_whole obtains a risk score of 0.300. Clean videos receive the lowest risk score of 0.000 and the highest reliability score of 1.000.
+
+## 5. Conclusion
+
+In this project, we proposed SIDA-Guard, a no-training quality-aware reliability layer for deepfake detection. Instead of training a new detector, SIDA-Guard analyzes whether input video quality may make detector predictions unreliable.
+
+The framework generates controlled perturbations, records metadata, extracts whole-frame and fixed face ROI quality metrics, and computes a final quality risk score. Experimental results show that whole-frame metrics capture global degradation, while fixed face ROI metrics distinguish face degradation from background degradation.
+
+Future work will integrate SIDA-Guard with formal video deepfake detectors such as Xception from DeepfakeBench, evaluate false positive reduction, replace the face detector with a stronger model, and scale the experiment to larger datasets.
+
+## Data Availability Statement
+
+The source code, README, installation instructions, and dataset information are available in the project GitHub repository.
+
+GitHub repository link: **TO BE ADDED**
+
+Raw video datasets are not included in the repository due to size and dataset access restrictions. Users should download the dataset separately and follow the instructions in `data/README.md`.
+
+## Code Availability
+
+All source code used for video sampling, perturbation generation, quality metric extraction, fixed face ROI analysis, and SIDA-Guard risk scoring is included in the GitHub repository under the `src/` folder.

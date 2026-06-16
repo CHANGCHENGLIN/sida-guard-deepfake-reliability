@@ -1,0 +1,7 @@
+video_id,label,new_filename,new_path,original_path
+real_001,real,real_001.mp4,/kaggle/working/SIDA_Guard/data/raw/real/real_001.mp4,/kaggle/input/datasets/reubensuju/celeb-df-v2/Celeb-real/id46_0007.mp4
+real_002,real,real_002.mp4,/kaggle/working/SIDA_Guard/data/raw/real/real_002.mp4,/kaggle/input/datasets/reubensuju/celeb-df-v2/YouTube-real/00041.mp4
+real_003,real,real_003.mp4,/kaggle/working/SIDA_Guard/data/raw/real/real_003.mp4,/kaggle/input/datasets/reubensuju/celeb-df-v2/YouTube-real/00100.mp4
+fake_001,fake,fake_001.mp4,/kaggle/working/SIDA_Guard/data/raw/fake/fake_001.mp4,/kaggle/input/datasets/reubensuju/celeb-df-v2/Celeb-synthesis/id17_id28_0001.mp4
+fake_002,fake,fake_002.mp4,/kaggle/working/SIDA_Guard/data/raw/fake/fake_002.mp4,/kaggle/input/datasets/reubensuju/celeb-df-v2/Celeb-synthesis/id40_id41_0009.mp4
+fake_003,fake,fake_003.mp4,/kaggle/working/SIDA_Guard/data/raw/fake/fake_003.mp4,/kaggle/input/datasets/reubensuju/celeb-df-v2/Celeb-synthesis/id4_id28_0002.mp4
