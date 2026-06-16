@@ -131,12 +131,22 @@ Future work will integrate SIDA-Guard with formal video deepfake detectors such 
 
 ## Data Availability Statement
 
-The source code, README, installation instructions, and dataset information are available in the project GitHub repository.
+The source code, README file, installation instructions, dataset information, experimental scripts, and selected output results are available in the project GitHub repository:
 
-GitHub repository link: **https://github.com/CHANGCHENGLIN/sida-guard-deepfake-reliability**
+https://github.com/CHANGCHENGLIN/sida-guard-deepfake-reliability
+
+The raw video dataset is not included in the repository due to file size and dataset distribution restrictions. The experiments were conducted on Kaggle using the Celeb-DF v2 dataset. In the Kaggle environment, the dataset was mounted under:
+
+/kaggle/input/datasets/reubensuju/celeb-df-v2
+
+To reproduce the experiment, users should create a Kaggle Notebook, add the Celeb-DF v2 dataset through Kaggle’s “Add Data” function, and then run the SIDA-Guard pipeline. The pipeline searches video files recursively under the Kaggle input directory.
 
 Raw video datasets are not included in the repository due to size and dataset access restrictions. Users should download the dataset separately and follow the instructions in `data/README.md`.
 
 ## Code Availability
 
-All source code used for video sampling, perturbation generation, quality metric extraction, fixed face ROI analysis, and SIDA-Guard risk scoring is included in the GitHub repository under the `src/` folder.
+All source code used for video sampling, perturbation generation, metadata recording, quality metric extraction, fixed face ROI analysis, and SIDA-Guard risk scoring is available in the GitHub repository under the src/ folder:
+
+https://github.com/CHANGCHENGLIN/sida-guard-deepfake-reliability
+
+The figures/ folder contains generated charts and visual examples used in the report.
