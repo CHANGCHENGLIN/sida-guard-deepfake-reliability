@@ -139,4 +139,4 @@ Raw video datasets are not included in the repository due to size and dataset ac
 
 ## Code Availability
 
-All source code used for video sampling, perturbation generation, quality metric extraction, fixed face ROI analysis, and SIDA-Guard risk scoring is included in the GitHub repository under the `src/` folder.
+All source code used for video sampling, perturbation generation, quality metric extraction, fixed face ROI analysis, and SIDA-Guard risk scoring is included in the GitHub repository under the `figures/` folder.
