@@ -133,7 +133,7 @@ Future work will integrate SIDA-Guard with formal video deepfake detectors such 
 
 The source code, README, installation instructions, and dataset information are available in the project GitHub repository.
 
-GitHub repository link: **TO BE ADDED**
+GitHub repository link: **https://github.com/CHANGCHENGLIN/sida-guard-deepfake-reliability**
 
 Raw video datasets are not included in the repository due to size and dataset access restrictions. Users should download the dataset separately and follow the instructions in `data/README.md`.
 
